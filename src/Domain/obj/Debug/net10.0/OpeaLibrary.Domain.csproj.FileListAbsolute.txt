@@ -1,0 +1,12 @@
+/home/renan/projetos/opea/src/Domain/bin/Debug/net10.0/OpeaLibrary.Domain.deps.json
+/home/renan/projetos/opea/src/Domain/bin/Debug/net10.0/OpeaLibrary.Domain.dll
+/home/renan/projetos/opea/src/Domain/bin/Debug/net10.0/OpeaLibrary.Domain.pdb
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.AssemblyInfoInputs.cache
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.AssemblyInfo.cs
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.csproj.CoreCompileInputs.cache
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.dll
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/refint/OpeaLibrary.Domain.dll
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.pdb
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/ref/OpeaLibrary.Domain.dll
+/home/renan/projetos/opea/src/Domain/obj/Debug/net10.0/OpeaLibrary.Domain.sourcelink.json

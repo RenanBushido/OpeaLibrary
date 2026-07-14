@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/Domain/">
+    <Project Path="Domain/OpeaLibrary.Domain.csproj" />
+  </Folder>
+</Solution>
