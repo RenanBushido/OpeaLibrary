@@ -21,19 +21,19 @@ public class LoanTests
     }
 
     [Fact]
-    public void Create_WithEmptyBookId_ThrowsArgumentException()
+    public void Create_WithEmptyBookId_ThrowsDomainException()
     {
-        var exception = Assert.Throws<ArgumentException>(() => Loan.Create(Guid.Empty, Guid.NewGuid()));
+        var exception = Assert.Throws<DomainException>(() => Loan.Create(Guid.Empty, Guid.NewGuid()));
 
-        Assert.Equal("bookId", exception.ParamName);
+        Assert.Equal("Book ID cannot be empty.", exception.Message);
     }
 
     [Fact]
-    public void Create_WithEmptyUserId_ThrowsArgumentException()
+    public void Create_WithEmptyUserId_ThrowsDomainException()
     {
-        var exception = Assert.Throws<ArgumentException>(() => Loan.Create(Guid.NewGuid(), Guid.Empty));
+        var exception = Assert.Throws<DomainException>(() => Loan.Create(Guid.NewGuid(), Guid.Empty));
 
-        Assert.Equal("userId", exception.ParamName);
+        Assert.Equal("User ID cannot be empty.", exception.Message);
     }
 
     [Fact]
@@ -49,14 +49,15 @@ public class LoanTests
     }
 
     [Fact]
-    public void MarkAsReturned_WhenAlreadyReturned_ThrowsInvalidOperationExceptionAndLeavesStateUnchanged()
+    public void MarkAsReturned_WhenAlreadyReturned_ThrowsDomainExceptionAndLeavesStateUnchanged()
     {
         var loan = Loan.Create(Guid.NewGuid(), Guid.NewGuid());
         loan.MarkAsReturned();
         var returnDate = loan.ReturnDate;
 
-        Assert.Throws<InvalidOperationException>(loan.MarkAsReturned);
+        var exception = Assert.Throws<DomainException>(loan.MarkAsReturned);
 
+        Assert.Equal("This loan has already been returned.", exception.Message);
         Assert.Equal(returnDate, loan.ReturnDate);
         Assert.Equal(StatusLoan.Returned, loan.Status);
     }

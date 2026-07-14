@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj": {}
+    "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj": {}
   },
   "projects": {
-    "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj": {
+    "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj",
+        "projectUniqueName": "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj",
         "projectName": "OpeaLibrary.Domain",
-        "projectPath": "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj",
+        "projectPath": "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj",
         "packagesPath": "/home/renan/.nuget/packages/",
-        "outputPath": "/home/renan/projetos/opea/src/Domain/obj/",
+        "outputPath": "/home/renan/projetos/OpeaLibrary/src/Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/renan/.nuget/NuGet/NuGet.Config"

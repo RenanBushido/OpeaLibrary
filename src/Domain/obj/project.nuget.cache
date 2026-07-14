@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JCo0q6KEyjk=",
+  "dgSpecHash": "PxKxfEQZ1S4=",
   "success": true,
-  "projectFilePath": "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj",
+  "projectFilePath": "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

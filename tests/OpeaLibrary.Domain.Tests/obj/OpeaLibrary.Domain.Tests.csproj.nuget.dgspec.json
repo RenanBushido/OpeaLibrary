@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/renan/projetos/opea/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj": {}
+    "/home/renan/projetos/OpeaLibrary/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj": {}
   },
   "projects": {
-    "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj": {
+    "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj",
+        "projectUniqueName": "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj",
         "projectName": "OpeaLibrary.Domain",
-        "projectPath": "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj",
+        "projectPath": "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj",
         "packagesPath": "/home/renan/.nuget/packages/",
-        "outputPath": "/home/renan/projetos/opea/src/Domain/obj/",
+        "outputPath": "/home/renan/projetos/OpeaLibrary/src/Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/renan/.nuget/NuGet/NuGet.Config"
@@ -338,14 +338,14 @@
         }
       }
     },
-    "/home/renan/projetos/opea/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj": {
+    "/home/renan/projetos/OpeaLibrary/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/renan/projetos/opea/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj",
+        "projectUniqueName": "/home/renan/projetos/OpeaLibrary/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj",
         "projectName": "OpeaLibrary.Domain.Tests",
-        "projectPath": "/home/renan/projetos/opea/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj",
+        "projectPath": "/home/renan/projetos/OpeaLibrary/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj",
         "packagesPath": "/home/renan/.nuget/packages/",
-        "outputPath": "/home/renan/projetos/opea/tests/OpeaLibrary.Domain.Tests/obj/",
+        "outputPath": "/home/renan/projetos/OpeaLibrary/tests/OpeaLibrary.Domain.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/renan/.nuget/NuGet/NuGet.Config"
@@ -361,8 +361,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj": {
-                "projectPath": "/home/renan/projetos/opea/src/Domain/OpeaLibrary.Domain.csproj"
+              "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj": {
+                "projectPath": "/home/renan/projetos/OpeaLibrary/src/Domain/OpeaLibrary.Domain.csproj"
               }
             }
           }

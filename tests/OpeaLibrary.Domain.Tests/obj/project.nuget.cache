@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "X+zNq4FdAYI=",
+  "dgSpecHash": "tIAIvlOWv2M=",
   "success": true,
-  "projectFilePath": "/home/renan/projetos/opea/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj",
+  "projectFilePath": "/home/renan/projetos/OpeaLibrary/tests/OpeaLibrary.Domain.Tests/OpeaLibrary.Domain.Tests.csproj",
   "expectedPackageFiles": [
     "/home/renan/.nuget/packages/coverlet.collector/6.0.4/coverlet.collector.6.0.4.nupkg.sha512",
     "/home/renan/.nuget/packages/microsoft.codecoverage/17.14.1/microsoft.codecoverage.17.14.1.nupkg.sha512",

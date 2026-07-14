@@ -18,32 +18,32 @@ public class BookTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Create_WithInvalidTitle_ThrowsArgumentException(string? title)
+    public void Create_WithInvalidTitle_ThrowsDomainException(string? title)
     {
-        var exception = Assert.Throws<ArgumentException>(() => Book.Create(title!, "Author", 2008));
+        var exception = Assert.Throws<DomainException>(() => Book.Create(title!, "Author", 2008));
 
-        Assert.Equal("title", exception.ParamName);
+        Assert.Equal("Title cannot be empty.", exception.Message);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Create_WithInvalidAuthor_ThrowsArgumentException(string? author)
+    public void Create_WithInvalidAuthor_ThrowsDomainException(string? author)
     {
-        var exception = Assert.Throws<ArgumentException>(() => Book.Create("Title", author!, 2008));
+        var exception = Assert.Throws<DomainException>(() => Book.Create("Title", author!, 2008));
 
-        Assert.Equal("author", exception.ParamName);
+        Assert.Equal("Author cannot be empty.", exception.Message);
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public void Create_WithNonPositivePublishedYear_ThrowsArgumentException(int publishedYear)
+    public void Create_WithNonPositivePublishedYear_ThrowsDomainException(int publishedYear)
     {
-        var exception = Assert.Throws<ArgumentException>(() => Book.Create("Title", "Author", publishedYear));
+        var exception = Assert.Throws<DomainException>(() => Book.Create("Title", "Author", publishedYear));
 
-        Assert.Equal("publishedYear", exception.ParamName);
+        Assert.Equal("Published year must be a positive integer.", exception.Message);
     }
 
     [Fact]
@@ -58,11 +58,13 @@ public class BookTests
     }
 
     [Fact]
-    public void DecreaseQuantity_WhenNoLoanAvailable_ThrowsInvalidOperationException()
+    public void DecreaseQuantity_WhenNoLoanAvailable_ThrowsDomainException()
     {
         var book = Book.Create("Title", "Author", 2008);
 
-        Assert.Throws<InvalidOperationException>(book.DecreaseQuantity);
+        var exception = Assert.Throws<DomainException>(book.DecreaseQuantity);
+
+        Assert.Equal("There are no books available to loan.", exception.Message);
         Assert.Equal(0, book.QuantityAvailable);
     }
 
