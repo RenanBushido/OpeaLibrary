@@ -1,9 +1,8 @@
-namespace OpeaLibrary.Domain.Interfaces
+namespace OpeaLibrary.Domain.Interfaces;
+
+public interface ILoanRepository
 {
-    public interface ILoanRepository
-    {
-        Task<bool> RequestLoanAsync(int bookId, int userId);
-        Task<bool> ReturnLoanAsync(int loanId);
-        Task<IEnumerable<Loan>> GetAllLoansAsync();
-    }
+    Task<bool> RequestLoanAsync(Guid bookId);
+    Task<bool> ReturnLoanAsync(Guid loanId);
+    Task<IEnumerable<Loan>> GetAllLoansAsync();
 }

@@ -1,9 +1,8 @@
-namespace OpeaLibrary.Domain.Interfaces
+namespace OpeaLibrary.Domain.Interfaces;
+
+public interface IBookRepository
 {
-    public interface IBookRepository
-    {
-        Task AddBookAsync(Book book);
-        Task<Book> GetBookByIdAsync(int id);
-        Task<IEnumerable<Book>> GetAllBooksAsync();
-    }
+    Task AddBookAsync(Book book);
+    Task<Book?> GetBookByIdAsync(Guid id);
+    Task<IEnumerable<Book>> GetAllBooksAsync();
 }

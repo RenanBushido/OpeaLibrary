@@ -2,4 +2,7 @@
   <Folder Name="/Domain/">
     <Project Path="Domain/OpeaLibrary.Domain.csproj" />
   </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/OpeaLibrary.Infrastructure.csproj" />
+  </Folder>
 </Solution>
