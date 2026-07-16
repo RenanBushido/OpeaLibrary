@@ -1,9 +1,8 @@
-namespace OpeaLibrary.Domain.Interfaces
+namespace OpeaLibrary.Domain.Interfaces;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        IBookRepository BookRepository { get; }
-        ILoanRepository LoanRepository { get; }
-        Task CommitAsync(CancellationToken cancellationToken = default);
-    }
+    IBookRepository BookRepository { get; }
+    ILoanRepository LoanRepository { get; }
+    Task CommitAsync(CancellationToken cancellationToken = default);
 }

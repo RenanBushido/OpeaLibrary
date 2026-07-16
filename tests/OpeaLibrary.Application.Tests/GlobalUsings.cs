@@ -1,0 +1,16 @@
+global using AutoMapper;
+global using FluentValidation;
+global using MediatR;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using Moq;
+global using OpeaLibrary.Application.Behaviors;
+global using OpeaLibrary.Application.Books.Commands.AddBook;
+global using OpeaLibrary.Application.Books.Queries.GetAllBook;
+global using OpeaLibrary.Application.Books.Queries.GetBookById;
+global using OpeaLibrary.Application.Loans.Commands.RequestLoan;
+global using OpeaLibrary.Application.Loans.Commands.ReturnLoan;
+global using OpeaLibrary.Application.Loans.Queries.GetAllLoans;
+global using OpeaLibrary.Application.Mappings;
+global using OpeaLibrary.Domain.Entities;
+global using OpeaLibrary.Domain.Enums;
+global using OpeaLibrary.Domain.Interfaces;

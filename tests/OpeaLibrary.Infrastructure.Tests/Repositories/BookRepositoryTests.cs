@@ -6,13 +6,13 @@ public class BookRepositoryTests
     public async Task AddBookAsync_PersistsBook_RetrievableAfterSave()
     {
         using var dbContext = TestDbContextFactory.Create();
-        var repository = new BookRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
         var book = Book.Create("Clean Code", "Robert C. Martin", 2008);
 
-        await repository.AddBookAsync(book);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book);
+        await unitOfWork.CommitAsync();
 
-        var persisted = await dbContext.Books.FindAsync(book.Id);
+        var persisted = await unitOfWork.BookRepository.GetBookByIdAsync(book.Id, CancellationToken.None);
         Assert.NotNull(persisted);
         Assert.Equal(book.Title, persisted!.Title);
     }
@@ -21,12 +21,12 @@ public class BookRepositoryTests
     public async Task GetBookByIdAsync_WhenBookExists_ReturnsBook()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var book = Book.Create("Clean Code", "Robert C. Martin", 2008);
-        await dbContext.Books.AddAsync(book);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book);
+        await unitOfWork.CommitAsync();
 
-        var repository = new BookRepository(dbContext);
-        var result = await repository.GetBookByIdAsync(book.Id);
+        var result = await unitOfWork.BookRepository.GetBookByIdAsync(book.Id, CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal(book.Id, result!.Id);
@@ -36,9 +36,9 @@ public class BookRepositoryTests
     public async Task GetBookByIdAsync_WhenBookDoesNotExist_ReturnsNull()
     {
         using var dbContext = TestDbContextFactory.Create();
-        var repository = new BookRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
 
-        var result = await repository.GetBookByIdAsync(Guid.NewGuid());
+        var result = await unitOfWork.BookRepository.GetBookByIdAsync(Guid.NewGuid(), CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -47,9 +47,9 @@ public class BookRepositoryTests
     public async Task GetAllBooksAsync_WhenNoBooksPersisted_ReturnsEmptyCollection()
     {
         using var dbContext = TestDbContextFactory.Create();
-        var repository = new BookRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
 
-        var result = await repository.GetAllBooksAsync();
+        var result = await unitOfWork.BookRepository.GetAllBooksAsync(CancellationToken.None);
 
         Assert.Empty(result);
     }
@@ -58,13 +58,14 @@ public class BookRepositoryTests
     public async Task GetAllBooksAsync_WhenBooksPersisted_ReturnsAllBooks()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var book1 = Book.Create("Clean Code", "Robert C. Martin", 2008);
         var book2 = Book.Create("The Pragmatic Programmer", "Andy Hunt", 1999);
-        await dbContext.Books.AddRangeAsync(book1, book2);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book1);
+        await unitOfWork.BookRepository.AddBookAsync(book2);
+        await unitOfWork.CommitAsync();
 
-        var repository = new BookRepository(dbContext);
-        var result = await repository.GetAllBooksAsync();
+        var result = await unitOfWork.BookRepository.GetAllBooksAsync(CancellationToken.None);
 
         Assert.Equal(2, result.Count());
         Assert.Contains(result, b => b.Id == book1.Id);

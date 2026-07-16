@@ -8,7 +8,7 @@ public class LoanRepository(OpeaLibraryDbContext dbContext) : ILoanRepository
     {
         var book = await _dbContext.Books.FindAsync(bookId);
 
-        if (book == null || book.QuantityAvailable <= 0) return false;
+        if (book == null || book.QuantityAvailable <= 0) return false;        
 
         book.DecreaseQuantity();
 
@@ -34,8 +34,8 @@ public class LoanRepository(OpeaLibraryDbContext dbContext) : ILoanRepository
         return true;
     }
 
-    public async Task<IEnumerable<Loan>> GetAllLoansAsync()
+    public async Task<IEnumerable<Loan>> GetAllLoansAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Loans.ToListAsync();
+        return await _dbContext.Loans.ToListAsync(cancellationToken);
     }
 }

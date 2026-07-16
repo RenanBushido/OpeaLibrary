@@ -40,4 +40,17 @@ public class LoanConfigTests
         Assert.NotNull(returnDate);
         Assert.True(returnDate!.IsNullable);
     }
+
+    [Fact]
+    public void LoanEntity_HasForeignKeyRelationshipToBook()
+    {
+        using var dbContext = TestDbContextFactory.Create();
+        var entityType = dbContext.Model.FindEntityType(typeof(Loan));
+
+        var foreignKey = Assert.Single(entityType!.GetForeignKeys());
+
+        Assert.Equal(typeof(Book), foreignKey.PrincipalEntityType.ClrType);
+        Assert.Equal(nameof(Loan.BookId), Assert.Single(foreignKey.Properties).Name);
+        Assert.Equal(DeleteBehavior.Restrict, foreignKey.DeleteBehavior);
+    }
 }

@@ -17,13 +17,13 @@ public class LoanRepositoryTests
     public async Task RequestLoanAsync_WhenBookIsAvailable_CreatesActiveLoanAndDecrementsQuantity()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var book = CreateAvailableBook(quantity: 2);
-        await dbContext.Books.AddAsync(book);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book);
+        await unitOfWork.CommitAsync();
 
-        var repository = new LoanRepository(dbContext);
-        var result = await repository.RequestLoanAsync(book.Id);
-        await dbContext.SaveChangesAsync();
+        var result = await unitOfWork.LoanRepository.RequestLoanAsync(book.Id);
+        await unitOfWork.CommitAsync();
 
         Assert.True(result);
 
@@ -33,7 +33,7 @@ public class LoanRepositoryTests
         Assert.Equal(StatusLoan.Active, loan.Status);
         Assert.Null(loan.ReturnDate);
 
-        var persistedBook = await dbContext.Books.FindAsync(book.Id);
+        var persistedBook = await unitOfWork.BookRepository.GetBookByIdAsync(book.Id, CancellationToken.None);
         Assert.Equal(1, persistedBook!.QuantityAvailable);
     }
 
@@ -41,13 +41,13 @@ public class LoanRepositoryTests
     public async Task RequestLoanAsync_WhenBookHasNoAvailableCopies_ReturnsFalseAndPersistsNoLoan()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var book = CreateAvailableBook(quantity: 0);
-        await dbContext.Books.AddAsync(book);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book);
+        await unitOfWork.CommitAsync();
 
-        var repository = new LoanRepository(dbContext);
-        var result = await repository.RequestLoanAsync(book.Id);
-        await dbContext.SaveChangesAsync();
+        var result = await unitOfWork.LoanRepository.RequestLoanAsync(book.Id);
+        await unitOfWork.CommitAsync();
 
         Assert.False(result);
         Assert.Empty(await dbContext.Loans.ToListAsync());
@@ -58,9 +58,9 @@ public class LoanRepositoryTests
     public async Task RequestLoanAsync_WhenBookDoesNotExist_ReturnsFalse()
     {
         using var dbContext = TestDbContextFactory.Create();
-        var repository = new LoanRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
 
-        var result = await repository.RequestLoanAsync(Guid.NewGuid());
+        var result = await unitOfWork.LoanRepository.RequestLoanAsync(Guid.NewGuid());
 
         Assert.False(result);
         Assert.Empty(await dbContext.Loans.ToListAsync());
@@ -70,17 +70,17 @@ public class LoanRepositoryTests
     public async Task ReturnLoanAsync_WhenLoanIsActive_MarksReturnedAndIncrementsBookQuantity()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var book = CreateAvailableBook(quantity: 1);
-        await dbContext.Books.AddAsync(book);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book);
+        await unitOfWork.CommitAsync();
 
-        var loanRepository = new LoanRepository(dbContext);
-        await loanRepository.RequestLoanAsync(book.Id);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.LoanRepository.RequestLoanAsync(book.Id);
+        await unitOfWork.CommitAsync();
         var loan = Assert.Single(await dbContext.Loans.ToListAsync());
 
-        var result = await loanRepository.ReturnLoanAsync(loan.Id);
-        await dbContext.SaveChangesAsync();
+        var result = await unitOfWork.LoanRepository.ReturnLoanAsync(loan.Id);
+        await unitOfWork.CommitAsync();
 
         Assert.True(result);
 
@@ -88,7 +88,7 @@ public class LoanRepositoryTests
         Assert.NotNull(persistedLoan!.ReturnDate);
         Assert.Equal(StatusLoan.Returned, persistedLoan.Status);
 
-        var persistedBook = await dbContext.Books.FindAsync(book.Id);
+        var persistedBook = await unitOfWork.BookRepository.GetBookByIdAsync(book.Id, CancellationToken.None);
         Assert.Equal(1, persistedBook!.QuantityAvailable);
     }
 
@@ -96,13 +96,16 @@ public class LoanRepositoryTests
     public async Task ReturnLoanAsync_WhenAssociatedBookNoLongerExists_StillMarksReturned()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var loan = Loan.Create(Guid.NewGuid());
+        // ILoanRepository has no method to insert an arbitrary, already-constructed Loan
+        // (only RequestLoanAsync, which always creates its own Loan for an existing book),
+        // so this orphaned-loan precondition must be seeded directly via the DbSet.
         await dbContext.Loans.AddAsync(loan);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.CommitAsync();
 
-        var repository = new LoanRepository(dbContext);
-        var result = await repository.ReturnLoanAsync(loan.Id);
-        await dbContext.SaveChangesAsync();
+        var result = await unitOfWork.LoanRepository.ReturnLoanAsync(loan.Id);
+        await unitOfWork.CommitAsync();
 
         Assert.True(result);
         var persistedLoan = await dbContext.Loans.FindAsync(loan.Id);
@@ -113,9 +116,9 @@ public class LoanRepositoryTests
     public async Task ReturnLoanAsync_WhenLoanDoesNotExist_ReturnsFalse()
     {
         using var dbContext = TestDbContextFactory.Create();
-        var repository = new LoanRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
 
-        var result = await repository.ReturnLoanAsync(Guid.NewGuid());
+        var result = await unitOfWork.LoanRepository.ReturnLoanAsync(Guid.NewGuid());
 
         Assert.False(result);
     }
@@ -124,24 +127,24 @@ public class LoanRepositoryTests
     public async Task ReturnLoanAsync_WhenLoanAlreadyReturned_ReturnsFalseAndDoesNotChangeQuantityAgain()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var book = CreateAvailableBook(quantity: 1);
-        await dbContext.Books.AddAsync(book);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.BookRepository.AddBookAsync(book);
+        await unitOfWork.CommitAsync();
 
-        var repository = new LoanRepository(dbContext);
-        await repository.RequestLoanAsync(book.Id);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.LoanRepository.RequestLoanAsync(book.Id);
+        await unitOfWork.CommitAsync();
         var loan = Assert.Single(await dbContext.Loans.ToListAsync());
 
-        await repository.ReturnLoanAsync(loan.Id);
-        await dbContext.SaveChangesAsync();
-        var quantityAfterFirstReturn = (await dbContext.Books.FindAsync(book.Id))!.QuantityAvailable;
+        await unitOfWork.LoanRepository.ReturnLoanAsync(loan.Id);
+        await unitOfWork.CommitAsync();
+        var quantityAfterFirstReturn = (await unitOfWork.BookRepository.GetBookByIdAsync(book.Id, CancellationToken.None))!.QuantityAvailable;
 
-        var result = await repository.ReturnLoanAsync(loan.Id);
-        await dbContext.SaveChangesAsync();
+        var result = await unitOfWork.LoanRepository.ReturnLoanAsync(loan.Id);
+        await unitOfWork.CommitAsync();
 
         Assert.False(result);
-        var quantityAfterSecondReturn = (await dbContext.Books.FindAsync(book.Id))!.QuantityAvailable;
+        var quantityAfterSecondReturn = (await unitOfWork.BookRepository.GetBookByIdAsync(book.Id, CancellationToken.None))!.QuantityAvailable;
         Assert.Equal(quantityAfterFirstReturn, quantityAfterSecondReturn);
     }
 
@@ -149,9 +152,9 @@ public class LoanRepositoryTests
     public async Task GetAllLoansAsync_WhenNoLoansPersisted_ReturnsEmptyCollection()
     {
         using var dbContext = TestDbContextFactory.Create();
-        var repository = new LoanRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
 
-        var result = await repository.GetAllLoansAsync();
+        var result = await unitOfWork.LoanRepository.GetAllLoansAsync(CancellationToken.None);
 
         Assert.Empty(result);
     }
@@ -160,13 +163,16 @@ public class LoanRepositoryTests
     public async Task GetAllLoansAsync_WhenLoansPersisted_ReturnsAllLoans()
     {
         using var dbContext = TestDbContextFactory.Create();
+        var unitOfWork = new UnitOfWork(dbContext);
         var loan1 = Loan.Create(Guid.NewGuid());
         var loan2 = Loan.Create(Guid.NewGuid());
+        // Same limitation as above: ILoanRepository has no generic "add this loan" method,
+        // so these freestanding loans (no associated book needed for this read-only test)
+        // are seeded directly via the DbSet.
         await dbContext.Loans.AddRangeAsync(loan1, loan2);
-        await dbContext.SaveChangesAsync();
+        await unitOfWork.CommitAsync();
 
-        var repository = new LoanRepository(dbContext);
-        var result = await repository.GetAllLoansAsync();
+        var result = await unitOfWork.LoanRepository.GetAllLoansAsync(CancellationToken.None);
 
         Assert.Equal(2, result.Count());
         Assert.Contains(result, l => l.Id == loan1.Id);

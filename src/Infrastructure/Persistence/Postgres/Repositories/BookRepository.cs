@@ -9,13 +9,13 @@ public sealed class BookRepository(OpeaLibraryDbContext dbContext) : IBookReposi
         await _dbContext.Books.AddAsync(book);        
     }
 
-    public async Task<IEnumerable<Book>> GetAllBooksAsync()
+    public async Task<IEnumerable<Book>> GetAllBooksAsync(CancellationToken cancellationToken)
     {
-        return await _dbContext.Books.ToListAsync();
+        return await _dbContext.Books.ToListAsync(cancellationToken);
     }
 
-    public async Task<Book?> GetBookByIdAsync(Guid id)
+    public async Task<Book?> GetBookByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Books.FindAsync(id);
+        return await _dbContext.Books.FindAsync(id, cancellationToken);
     }
 }

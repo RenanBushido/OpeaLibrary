@@ -47,6 +47,22 @@ public class BookTests
     }
 
     [Fact]
+    public void Create_WithNegativeQuantityAvailable_ThrowsDomainException()
+    {
+        var exception = Assert.Throws<DomainException>(() => Book.Create("Title", "Author", 2008, -1));
+
+        Assert.Equal("Quantity available cannot be negative.", exception.Message);
+    }
+
+    [Fact]
+    public void Create_WithPositiveQuantityAvailable_SetsQuantityAvailable()
+    {
+        var book = Book.Create("Title", "Author", 2008, 5);
+
+        Assert.Equal(5, book.QuantityAvailable);
+    }
+
+    [Fact]
     public void DecreaseQuantity_WhenLoanAvailable_DecrementsQuantityAvailable()
     {
         var book = Book.Create("Title", "Author", 2008);

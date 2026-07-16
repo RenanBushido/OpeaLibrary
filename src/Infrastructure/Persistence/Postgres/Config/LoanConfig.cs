@@ -14,12 +14,17 @@ public class LoanConfig : IEntityTypeConfiguration<Loan>
 
         builder.Property(l => l.BookId)
             .HasColumnType("uuid")
-            .IsRequired();        
+            .IsRequired();
 
         builder.Property(l => l.LoanDate)
             .IsRequired();
 
         builder.Property(l => l.ReturnDate)
             .IsRequired(false);
+
+        builder.HasOne<Book>()
+            .WithMany()
+            .HasForeignKey(l => l.BookId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
