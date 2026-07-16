@@ -7,8 +7,11 @@ public static class InfrastructureExtensions
         var connectionString = configuration.GetConnectionString("OpeaLibraryWriteConnection")
             ?? throw new InvalidOperationException("Connection string 'OpeaLibraryConnection' not found.");
 
-        services.AddDbContext<OpeaLibraryDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        services.AddScoped<DomainEventsInterceptor>();
+
+        services.AddDbContext<OpeaLibraryDbContext>((serviceProvider, options) =>
+            options.UseNpgsql(connectionString)
+                .AddInterceptors(serviceProvider.GetRequiredService<DomainEventsInterceptor>()));
 
         services.AddSingleton<IDbConnection>(provider =>
         {

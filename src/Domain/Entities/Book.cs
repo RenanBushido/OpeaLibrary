@@ -30,7 +30,27 @@ public sealed class Book : Entity
             QuantityAvailable = quantityAvailable
         };
 
+        book.AddDomainEvent(new BookCreatedEvent(book.Id, book.Title, book.Author, book.PublishedYear, book.QuantityAvailable));
+
         return book;
+    }
+
+    public static Book Restore(
+        Guid id,
+        string title,
+        string author,
+        int publishedYear,
+        int quantityAvailable
+    )
+    {
+        return new Book
+        {
+            Id = id,
+            Title = title,
+            Author = author,
+            PublishedYear = publishedYear,
+            QuantityAvailable = quantityAvailable
+        };
     }
 
     public void DecreaseQuantity()
@@ -39,10 +59,14 @@ public sealed class Book : Entity
             throw new DomainException("There are no books available to loan.");
 
         QuantityAvailable--;
+
+        AddDomainEvent(new BookQuantityChangedEvent(Id, QuantityAvailable));
     }
 
     public void IncreaseQuantity()
     {
         QuantityAvailable++;
+
+        AddDomainEvent(new BookQuantityChangedEvent(Id, QuantityAvailable));
     }
 }

@@ -22,7 +22,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${DB_READ_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_READ_PASSWORD}
     ports:
-      - "8081:8081"
+      - "27017:27017"
     volumes:
       - db_read_data:/data/db
     networks:

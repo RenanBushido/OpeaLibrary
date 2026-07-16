@@ -18,12 +18,15 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint("/openapi/v1.json", "OpeaLibrary.Api v1")
         );
 
-    using(var scope = app.Services.CreateAsyncScope())
-    {
-        var initializer = scope.ServiceProvider.GetRequiredService<IMongoDatabaseInitializer>();
+    using var scope = app.Services.CreateAsyncScope();
+    
+    var dbContext = scope.ServiceProvider.GetRequiredService<OpeaLibraryDbContext>();
 
-        await initializer.EnsureDatabaseCreatedAsync();
-    }
+    await dbContext.Database.MigrateAsync();
+
+    var initializer = scope.ServiceProvider.GetRequiredService<IMongoDatabaseInitializer>();
+
+    await initializer.EnsureDatabaseCreatedAsync();
 
 
 }

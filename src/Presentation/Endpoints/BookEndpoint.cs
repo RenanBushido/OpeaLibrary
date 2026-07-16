@@ -39,7 +39,6 @@ public static class BookEndpoint
     public static async Task<IResult> GetBookById(
         Guid id,
         IMediator mediator,
-        IMapper mapper,
         CancellationToken cancellationToken
     )
     {
@@ -52,7 +51,7 @@ public static class BookEndpoint
             return Results.NotFound();
         }
 
-        var bookResponse = mapper.Map<BookResponse>(book);
+        var bookResponse = new BookResponse(book.Id, book.Title, book.Author, book.PublishedYear, book.QuantityAvailable);
 
         return Results.Ok(bookResponse);
     }

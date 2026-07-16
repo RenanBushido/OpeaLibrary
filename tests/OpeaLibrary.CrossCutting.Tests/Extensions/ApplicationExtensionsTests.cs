@@ -21,6 +21,28 @@ public class ApplicationExtensionsTests
     }
 
     [Fact]
+    public void AddApiMediatR_RegistersInfrastructureNotificationHandlers()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+
+        services.AddApiMediatR();
+
+        Assert.Contains(
+            services,
+            d => d.ServiceType == typeof(INotificationHandler<DomainEventNotification<BookCreatedEvent>>) && d.ImplementationType == typeof(BookCreatedEventHandler));
+        Assert.Contains(
+            services,
+            d => d.ServiceType == typeof(INotificationHandler<DomainEventNotification<BookQuantityChangedEvent>>) && d.ImplementationType == typeof(BookQuantityChangedEventHandler));
+        Assert.Contains(
+            services,
+            d => d.ServiceType == typeof(INotificationHandler<DomainEventNotification<LoanCreatedEvent>>) && d.ImplementationType == typeof(LoanCreatedEventHandler));
+        Assert.Contains(
+            services,
+            d => d.ServiceType == typeof(INotificationHandler<DomainEventNotification<LoanReturnedEvent>>) && d.ImplementationType == typeof(LoanReturnedEventHandler));
+    }
+
+    [Fact]
     public void AddApiAutoMapper_RegistersMappingProfile()
     {
         var services = new ServiceCollection();

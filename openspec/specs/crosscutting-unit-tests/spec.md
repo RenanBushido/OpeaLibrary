@@ -13,11 +13,15 @@ The system SHALL provide an xUnit test project at `tests/OpeaLibrary.CrossCuttin
 - **THEN** all CrossCutting unit tests execute and report pass/fail results using xUnit, with no external database connection required
 
 ### Requirement: ApplicationExtensions Registration Coverage
-The test suite SHALL verify that `ApplicationExtensions.AddApiMediatR`, `AddApiAutoMapper`, and `AddApiValidators` each register their expected services on an `IServiceCollection`.
+The test suite SHALL verify that `ApplicationExtensions.AddApiMediatR`, `AddApiAutoMapper`, and `AddApiValidators` each register their expected services on an `IServiceCollection`, and that `AddApiMediatR`'s MediatR assembly scan discovers notification handlers defined in `OpeaLibrary.Infrastructure`, not just request handlers in `OpeaLibrary.Application`.
 
 #### Scenario: AddApiMediatR registers MediatR handlers and the validation pipeline behavior
 - **WHEN** `AddApiMediatR` is called on an `IServiceCollection`
 - **THEN** the resulting `IServiceCollection` contains registrations resolving `IMediator`, and includes `ValidationBehavior<,>` as a registered open pipeline behavior
+
+#### Scenario: AddApiMediatR discovers Infrastructure notification handlers
+- **WHEN** `AddApiMediatR` is called on an `IServiceCollection`
+- **THEN** the resulting `IServiceCollection` contains registrations resolving `INotificationHandler<DomainEventNotification<BookCreatedEvent>>` to `BookCreatedEventHandler`, `INotificationHandler<DomainEventNotification<BookQuantityChangedEvent>>` to `BookQuantityChangedEventHandler`, `INotificationHandler<DomainEventNotification<LoanCreatedEvent>>` to `LoanCreatedEventHandler`, and `INotificationHandler<DomainEventNotification<LoanReturnedEvent>>` to `LoanReturnedEventHandler`
 
 #### Scenario: AddApiAutoMapper registers the MappingProfile
 - **WHEN** `AddApiAutoMapper` is called on an `IServiceCollection` and the collection is built into a `ServiceProvider`

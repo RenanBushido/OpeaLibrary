@@ -20,4 +20,5 @@ global using OpeaLibrary.Infrastructure.Persistence.Mongodb.Interfaces;
 global using OpeaLibrary.Infrastructure.Persistence.Mongodb.Repositories;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres.Context;
+global using OpeaLibrary.Infrastructure.Persistence.Postgres.Interceptors;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres.Repositories;

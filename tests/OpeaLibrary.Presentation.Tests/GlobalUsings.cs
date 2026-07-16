@@ -1,0 +1,9 @@
+global using MediatR;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Moq;
+global using OpeaLibrary.Api.Endpoints;
+global using OpeaLibrary.Application.Loans.Commands.RequestLoan;
+global using OpeaLibrary.Application.Loans.Commands.ReturnLoan;
+global using OpeaLibrary.Application.Loans.Queries.GetAllLoans;
+global using OpeaLibrary.Domain.Enums;

@@ -22,6 +22,8 @@ public sealed class Loan : Entity
             Status = StatusLoan.Active
         };
 
+        loan.AddDomainEvent(new LoanCreatedEvent(loan.Id, loan.BookId, loan.LoanDate));
+
         return loan;
     }
 
@@ -50,5 +52,7 @@ public sealed class Loan : Entity
 
         ReturnDate = DateTime.UtcNow;
         Status = StatusLoan.Returned;
+
+        AddDomainEvent(new LoanReturnedEvent(Id, ReturnDate.Value));
     }
 }

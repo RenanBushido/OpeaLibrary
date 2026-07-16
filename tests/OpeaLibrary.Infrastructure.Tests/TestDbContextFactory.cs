@@ -21,16 +21,20 @@ internal sealed class SqliteTestDatabase : IDisposable
 
 internal static class TestDbContextFactory
 {
-    public static SqliteTestDatabase Create()
+    public static SqliteTestDatabase Create(params IInterceptor[] interceptors)
     {
         var connection = new SqliteConnection("DataSource=:memory:");
         connection.Open();
 
-        var options = new DbContextOptionsBuilder<OpeaLibraryDbContext>()
-            .UseSqlite(connection)
-            .Options;
+        var optionsBuilder = new DbContextOptionsBuilder<OpeaLibraryDbContext>()
+            .UseSqlite(connection);
 
-        var context = new OpeaLibraryDbContext(options);
+        if (interceptors.Length > 0)
+        {
+            optionsBuilder.AddInterceptors(interceptors);
+        }
+
+        var context = new OpeaLibraryDbContext(optionsBuilder.Options);
         context.Database.EnsureCreated();
 
         return new SqliteTestDatabase(connection, context);

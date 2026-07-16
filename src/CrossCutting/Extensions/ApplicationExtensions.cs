@@ -5,13 +5,15 @@ public static class ApplicationExtensions
     public static IServiceCollection AddApiMediatR(this IServiceCollection services)
     {
         var opeaHandlers = AppDomain.CurrentDomain.Load("OpeaLibrary.Application");
+        var opeaInfrastructureHandlers = AppDomain.CurrentDomain.Load("OpeaLibrary.Infrastructure");
 
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(opeaHandlers);
+            cfg.RegisterServicesFromAssembly(opeaInfrastructureHandlers);
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
-        
+
 
         return services;
     }

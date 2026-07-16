@@ -7,15 +7,13 @@ public static class LoanEndpoint
         var group = app.MapGroup("/api/loans")
             .WithTags("Loans");
 
-        group.MapPost("/request", RequestLoan)
-            .WithName("RequestLoan")
-            .Accepts<LoanRequest>("application/json")
-            .Produces<LoanResponse>(StatusCodes.Status201Created)
+        group.MapPut("/request/{id}", RequestLoan)
+            .WithName("RequestLoan")            
+            .Produces<LoanResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest);
 
-        group.MapPost("/return", ReturnLoan)
-            .WithName("ReturnLoan")
-            .Accepts<LoanRequest>("application/json")
+        group.MapPut("/return/{id}", ReturnLoan)
+            .WithName("ReturnLoan")            
             .Produces<LoanResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest);
 
@@ -29,44 +27,42 @@ public static class LoanEndpoint
 
     public static async Task<IResult> GetAllLoans(
         IMediator mediator,
-        IMapper mapper,
         CancellationToken cancellationToken
     )
     {
-        var command = new GetAllBooksRequest();
+        var query = new GetAllLoansRequest();
 
-        var result = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(query, cancellationToken);
 
-        var loans = mapper.Map<List<LoanResponse>>(result);
+        var loans = result.Select(l => new LoanResponse(l.Id, l.BookId, l.LoanDate, l.ReturnDate, l.Status)).ToList();
 
         return Results.Ok(loans);
     }
 
     public static async Task<IResult> ReturnLoan(
-        LoanRequest request,
+        Guid id,
         IMediator mediator
     )
     {
-        var command = new RequestLoanCommand(request.BookId);
+        var command = new ReturnLoanCommand(id);
 
         var result = await mediator.Send(command);
 
-        return Results.Created($"/{result}", new { result });
+        return Results.Ok(new { result });
     }
 
     public static async Task<IResult> RequestLoan(
-        LoanRequest request,
+        Guid id,
         IMediator mediator
     )
     {
-        var command = new RequestLoanCommand(request.BookId);
+        var command = new RequestLoanCommand(id);
 
         var result = await mediator.Send(command);
 
-        return Results.Created($"/{result}", new { result });
+        return Results.Ok(new { result });
     }
 
-    public sealed record LoanRequest(Guid BookId);
     public sealed record LoanResponse(
         Guid Id,
         Guid BookId,

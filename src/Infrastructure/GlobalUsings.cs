@@ -1,4 +1,6 @@
+global using MediatR;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Diagnostics;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Logging;
 global using MongoDB.Bson;
@@ -6,7 +8,10 @@ global using MongoDB.Bson.Serialization;
 global using MongoDB.Bson.Serialization.Serializers;
 global using MongoDB.Driver;
 global using OpeaLibrary.Domain.Entities;
+global using OpeaLibrary.Domain.Enums;
+global using OpeaLibrary.Domain.Events;
 global using OpeaLibrary.Domain.Interfaces;
 global using OpeaLibrary.Infrastructure.Persistence.Mongodb.Interfaces;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres.Context;
+global using OpeaLibrary.Infrastructure.Persistence.Postgres.Interceptors;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres.Repositories;

@@ -63,6 +63,42 @@ public class BookTests
     }
 
     [Fact]
+    public void Create_WithValidData_RaisesBookCreatedEvent()
+    {
+        var book = Book.Create("Clean Code", "Robert C. Martin", 2008, 3);
+
+        var domainEvent = Assert.Single(book.DomainEvents);
+        var bookCreatedEvent = Assert.IsType<BookCreatedEvent>(domainEvent);
+        Assert.Equal(book.Id, bookCreatedEvent.BookId);
+        Assert.Equal(book.Title, bookCreatedEvent.Title);
+        Assert.Equal(book.Author, bookCreatedEvent.Author);
+        Assert.Equal(book.PublishedYear, bookCreatedEvent.PublishedYear);
+        Assert.Equal(book.QuantityAvailable, bookCreatedEvent.QuantityAvailable);
+    }
+
+    [Fact]
+    public void Restore_WithValidData_ReturnsBookWithExpectedValues()
+    {
+        var id = Guid.NewGuid();
+
+        var book = Book.Restore(id, "Clean Code", "Robert C. Martin", 2008, 3);
+
+        Assert.Equal(id, book.Id);
+        Assert.Equal("Clean Code", book.Title);
+        Assert.Equal("Robert C. Martin", book.Author);
+        Assert.Equal(2008, book.PublishedYear);
+        Assert.Equal(3, book.QuantityAvailable);
+    }
+
+    [Fact]
+    public void Restore_RaisesNoDomainEvent()
+    {
+        var book = Book.Restore(Guid.NewGuid(), "Clean Code", "Robert C. Martin", 2008, 3);
+
+        Assert.Empty(book.DomainEvents);
+    }
+
+    [Fact]
     public void DecreaseQuantity_WhenLoanAvailable_DecrementsQuantityAvailable()
     {
         var book = Book.Create("Title", "Author", 2008);
@@ -71,6 +107,21 @@ public class BookTests
         book.DecreaseQuantity();
 
         Assert.Equal(0, book.QuantityAvailable);
+    }
+
+    [Fact]
+    public void DecreaseQuantity_WhenLoanAvailable_RaisesBookQuantityChangedEvent()
+    {
+        var book = Book.Create("Title", "Author", 2008);
+        book.IncreaseQuantity();
+        book.ClearDomainEvents();
+
+        book.DecreaseQuantity();
+
+        var domainEvent = Assert.Single(book.DomainEvents);
+        var quantityChangedEvent = Assert.IsType<BookQuantityChangedEvent>(domainEvent);
+        Assert.Equal(book.Id, quantityChangedEvent.BookId);
+        Assert.Equal(book.QuantityAvailable, quantityChangedEvent.QuantityAvailable);
     }
 
     [Fact]
@@ -85,6 +136,17 @@ public class BookTests
     }
 
     [Fact]
+    public void DecreaseQuantity_WhenNoLoanAvailable_RaisesNoAdditionalEvent()
+    {
+        var book = Book.Create("Title", "Author", 2008);
+        book.ClearDomainEvents();
+
+        Assert.Throws<DomainException>(book.DecreaseQuantity);
+
+        Assert.Empty(book.DomainEvents);
+    }
+
+    [Fact]
     public void IncreaseQuantity_IncrementsQuantityAvailable()
     {
         var book = Book.Create("Title", "Author", 2008);
@@ -92,5 +154,19 @@ public class BookTests
         book.IncreaseQuantity();
 
         Assert.Equal(1, book.QuantityAvailable);
+    }
+
+    [Fact]
+    public void IncreaseQuantity_RaisesBookQuantityChangedEvent()
+    {
+        var book = Book.Create("Title", "Author", 2008);
+        book.ClearDomainEvents();
+
+        book.IncreaseQuantity();
+
+        var domainEvent = Assert.Single(book.DomainEvents);
+        var quantityChangedEvent = Assert.IsType<BookQuantityChangedEvent>(domainEvent);
+        Assert.Equal(book.Id, quantityChangedEvent.BookId);
+        Assert.Equal(book.QuantityAvailable, quantityChangedEvent.QuantityAvailable);
     }
 }

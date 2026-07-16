@@ -27,6 +27,20 @@ public class LoanTests
     }
 
     [Fact]
+    public void Create_WithValidData_RaisesLoanCreatedEvent()
+    {
+        var bookId = Guid.NewGuid();
+
+        var loan = Loan.Create(bookId);
+
+        var domainEvent = Assert.Single(loan.DomainEvents);
+        var loanCreatedEvent = Assert.IsType<LoanCreatedEvent>(domainEvent);
+        Assert.Equal(loan.Id, loanCreatedEvent.LoanId);
+        Assert.Equal(loan.BookId, loanCreatedEvent.BookId);
+        Assert.Equal(loan.LoanDate, loanCreatedEvent.LoanDate);
+    }
+
+    [Fact]
     public void Restore_WithValidData_ReturnsLoanWithExpectedValues()
     {
         var id = Guid.NewGuid();
@@ -56,6 +70,20 @@ public class LoanTests
     }
 
     [Fact]
+    public void MarkAsReturned_OnActiveLoan_RaisesLoanReturnedEvent()
+    {
+        var loan = Loan.Create(Guid.NewGuid());
+        loan.ClearDomainEvents();
+
+        loan.MarkAsReturned();
+
+        var domainEvent = Assert.Single(loan.DomainEvents);
+        var loanReturnedEvent = Assert.IsType<LoanReturnedEvent>(domainEvent);
+        Assert.Equal(loan.Id, loanReturnedEvent.LoanId);
+        Assert.Equal(loan.ReturnDate, loanReturnedEvent.ReturnDate);
+    }
+
+    [Fact]
     public void MarkAsReturned_WhenAlreadyReturned_ThrowsDomainExceptionAndLeavesStateUnchanged()
     {
         var loan = Loan.Create(Guid.NewGuid());
@@ -67,5 +95,17 @@ public class LoanTests
         Assert.Equal("This loan has already been returned.", exception.Message);
         Assert.Equal(returnDate, loan.ReturnDate);
         Assert.Equal(StatusLoan.Returned, loan.Status);
+    }
+
+    [Fact]
+    public void MarkAsReturned_WhenAlreadyReturned_RaisesNoAdditionalEvent()
+    {
+        var loan = Loan.Create(Guid.NewGuid());
+        loan.MarkAsReturned();
+        loan.ClearDomainEvents();
+
+        Assert.Throws<DomainException>(loan.MarkAsReturned);
+
+        Assert.Empty(loan.DomainEvents);
     }
 }

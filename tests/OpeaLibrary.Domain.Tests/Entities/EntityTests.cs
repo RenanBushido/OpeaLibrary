@@ -2,14 +2,50 @@ namespace OpeaLibrary.Domain.Tests.Entities;
 
 public class EntityTests
 {
+    private sealed record TestDomainEvent : IDomainEvent;
+
     private sealed class TestEntity : Entity
     {
         public TestEntity(Guid id) => Id = id;
+
+        public void RaiseDomainEvent(IDomainEvent domainEvent) => AddDomainEvent(domainEvent);
     }
 
     private sealed class OtherTestEntity : Entity
     {
         public OtherTestEntity(Guid id) => Id = id;
+    }
+
+    [Fact]
+    public void DomainEvents_WhenNoneAdded_IsEmpty()
+    {
+        var entity = new TestEntity(Guid.NewGuid());
+
+        Assert.Empty(entity.DomainEvents);
+    }
+
+    [Fact]
+    public void AddDomainEvent_AppendsToDomainEvents()
+    {
+        var entity = new TestEntity(Guid.NewGuid());
+        var domainEvent = new TestDomainEvent();
+
+        entity.RaiseDomainEvent(domainEvent);
+
+        Assert.Single(entity.DomainEvents);
+        Assert.Same(domainEvent, entity.DomainEvents.Single());
+    }
+
+    [Fact]
+    public void ClearDomainEvents_RemovesAllRecordedEvents()
+    {
+        var entity = new TestEntity(Guid.NewGuid());
+        entity.RaiseDomainEvent(new TestDomainEvent());
+        entity.RaiseDomainEvent(new TestDomainEvent());
+
+        entity.ClearDomainEvents();
+
+        Assert.Empty(entity.DomainEvents);
     }
 
     [Fact]
