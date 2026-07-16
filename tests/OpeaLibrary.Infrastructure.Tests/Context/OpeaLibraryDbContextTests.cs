@@ -5,7 +5,8 @@ public class OpeaLibraryDbContextTests
     [Fact]
     public void DbSets_AreInitialized()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
 
         Assert.NotNull(dbContext.Books);
         Assert.NotNull(dbContext.Loans);
@@ -14,7 +15,8 @@ public class OpeaLibraryDbContextTests
     [Fact]
     public void OnModelCreating_AppliesConfigurationsForBookAndLoan()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
 
         Assert.NotNull(dbContext.Model.FindEntityType(typeof(Book)));
         Assert.NotNull(dbContext.Model.FindEntityType(typeof(Loan)));

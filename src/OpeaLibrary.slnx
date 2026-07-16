@@ -8,4 +8,7 @@
   <Folder Name="/Infrastructure/">
     <Project Path="Infrastructure/OpeaLibrary.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/OpeaLibrary.Api.csproj" />
+  </Folder>
 </Solution>

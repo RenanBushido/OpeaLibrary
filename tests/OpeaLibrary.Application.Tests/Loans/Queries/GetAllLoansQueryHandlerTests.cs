@@ -9,7 +9,7 @@ public class GetAllLoansQueryHandlerTests
     public async Task Handle_ReturnsMappedResponseForEachLoan()
     {
         var loan = Loan.Create(Guid.NewGuid());
-        var loanRepository = new Mock<ILoanRepository>();
+        var loanRepository = new Mock<ILoanReadRepository>();
         loanRepository.Setup(r => r.GetAllLoansAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync([loan]);
 

@@ -201,6 +201,9 @@ csharp_preserve_single_line_statements = true
 # CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 dotnet_diagnostic.CS8618.severity = none
 
+# CA1873: Avoid potentially expensive logging
+dotnet_diagnostic.CA1873.severity = none
+
 [*.{cs,vb}]
 
 # Naming rules

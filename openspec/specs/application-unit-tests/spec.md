@@ -1,63 +1,63 @@
 # application-unit-tests Specification
 
 ## Purpose
-Automated xUnit test suite validating the Application layer's CQRS handlers, validators, the `ValidationBehavior` pipeline, and `MappingProfile`, using Moq to fake `IUnitOfWork`/`IBookRepository`/`ILoanRepository` and a real AutoMapper `IMapper` built from `MappingProfile`. 100% line and branch coverage of `src/Application/` is the quality bar for this suite.
+Automated xUnit test suite validating the Application layer's CQRS handlers, validators, the `ValidationBehavior` pipeline, and `MappingProfile`, using Moq to fake `IUnitOfWork`, `IBookReadRepository`, `IBookWriteRepository`, `ILoanReadRepository`, and `ILoanWriteRepository`, and a real AutoMapper `IMapper` built from `MappingProfile`. 100% line and branch coverage of `src/Application/` is the quality bar for this suite.
 
 ## Requirements
 
 ### Requirement: xUnit Test Project for Application Layer
-The system SHALL provide an xUnit test project at `tests/OpeaLibrary.Application.Tests/` that references `OpeaLibrary.Application` and is runnable via `dotnet test`, using Moq to fake `IUnitOfWork`/`IBookRepository`/`ILoanRepository` and a real AutoMapper `IMapper` built from `MappingProfile`.
+The system SHALL provide an xUnit test project at `tests/OpeaLibrary.Application.Tests/` that references `OpeaLibrary.Application` and is runnable via `dotnet test`, using Moq to fake `IUnitOfWork`, `IBookReadRepository`, `IBookWriteRepository`, `ILoanReadRepository`, and `ILoanWriteRepository`, and a real AutoMapper `IMapper` built from `MappingProfile`.
 
 #### Scenario: Running the test suite
 - **WHEN** a developer runs `dotnet test` against `tests/OpeaLibrary.Application.Tests/OpeaLibrary.Application.Tests.csproj`
 - **THEN** all Application unit tests execute and report pass/fail results using xUnit, with no external database or API host required
 
 ### Requirement: RequestLoanCommandHandler Propagates Repository Result
-`RequestLoanCommandHandler` SHALL return the actual result of `ILoanRepository.RequestLoanAsync`, and SHALL only call `IUnitOfWork.CommitAsync` when that result is `true`.
+`RequestLoanCommandHandler` SHALL return the actual result of `ILoanWriteRepository.RequestLoanAsync` (accessed via `IUnitOfWork.LoanWriteRepository`), and SHALL only call `IUnitOfWork.CommitAsync` when that result is `true`.
 
 #### Scenario: Requesting a loan succeeds
-- **WHEN** `RequestLoanCommandHandler.Handle` is called and the faked `ILoanRepository.RequestLoanAsync` returns `true`
+- **WHEN** `RequestLoanCommandHandler.Handle` is called and the faked `ILoanWriteRepository.RequestLoanAsync` returns `true`
 - **THEN** the handler returns `true` and `IUnitOfWork.CommitAsync` is called exactly once
 
 #### Scenario: Requesting a loan fails
-- **WHEN** `RequestLoanCommandHandler.Handle` is called and the faked `ILoanRepository.RequestLoanAsync` returns `false`
+- **WHEN** `RequestLoanCommandHandler.Handle` is called and the faked `ILoanWriteRepository.RequestLoanAsync` returns `false`
 - **THEN** the handler returns `false` and `IUnitOfWork.CommitAsync` is never called
 
 ### Requirement: ReturnLoanCommandHandler Propagates Repository Result
-`ReturnLoanCommandHandler` SHALL return the actual result of `ILoanRepository.ReturnLoanAsync`, and SHALL only call `IUnitOfWork.CommitAsync` when that result is `true`.
+`ReturnLoanCommandHandler` SHALL return the actual result of `ILoanWriteRepository.ReturnLoanAsync` (accessed via `IUnitOfWork.LoanWriteRepository`), and SHALL only call `IUnitOfWork.CommitAsync` when that result is `true`.
 
 #### Scenario: Returning a loan succeeds
-- **WHEN** `ReturnLoanCommandHandler.Handle` is called and the faked `ILoanRepository.ReturnLoanAsync` returns `true`
+- **WHEN** `ReturnLoanCommandHandler.Handle` is called and the faked `ILoanWriteRepository.ReturnLoanAsync` returns `true`
 - **THEN** the handler returns `true` and `IUnitOfWork.CommitAsync` is called exactly once
 
 #### Scenario: Returning a loan fails
-- **WHEN** `ReturnLoanCommandHandler.Handle` is called and the faked `ILoanRepository.ReturnLoanAsync` returns `false`
+- **WHEN** `ReturnLoanCommandHandler.Handle` is called and the faked `ILoanWriteRepository.ReturnLoanAsync` returns `false`
 - **THEN** the handler returns `false` and `IUnitOfWork.CommitAsync` is never called
 
 ### Requirement: AddBookCommandHandler Coverage
-The test suite SHALL exercise `AddBookCommandHandler`, asserting it creates a `Book` via the Domain factory, adds it through `IUnitOfWork.BookRepository.AddBookAsync`, commits via `IUnitOfWork.CommitAsync`, and returns the new book's `Id`.
+The test suite SHALL exercise `AddBookCommandHandler`, asserting it creates a `Book` via the Domain factory, adds it through `IUnitOfWork.BookWriteRepository.AddBookAsync`, commits via `IUnitOfWork.CommitAsync`, and returns the new book's `Id`.
 
 #### Scenario: Adding a valid book
 - **WHEN** `AddBookCommandHandler.Handle` is called with a valid `AddBookCommand`
-- **THEN** `IUnitOfWork.BookRepository.AddBookAsync` and `IUnitOfWork.CommitAsync` are each called exactly once, and the returned `Guid` matches the created `Book`'s `Id`
+- **THEN** `IUnitOfWork.BookWriteRepository.AddBookAsync` and `IUnitOfWork.CommitAsync` are each called exactly once, and the returned `Guid` matches the created `Book`'s `Id`
 
 ### Requirement: Query Handler Coverage
-The test suite SHALL exercise `GetAllBookQueryHandler`, `GetBookByIdQueryHandler`, and `GetAllLoansQueryHandler`, asserting each maps repository results to its response type via the real `MappingProfile`.
+The test suite SHALL exercise `GetAllBooksQueryHandler`, `GetBookByIdQueryHandler`, and `GetAllLoansQueryHandler`, asserting each maps read-repository results to its response type via the real `MappingProfile`.
 
 #### Scenario: Getting all books
-- **WHEN** `GetAllBookQueryHandler.Handle` is called and the faked `IBookRepository.GetAllBooksAsync` returns a collection of `Book`
-- **THEN** the handler returns a `GetAllBookResponse` for each `Book`, with fields mapped correctly
+- **WHEN** `GetAllBooksQueryHandler.Handle` is called and the faked `IBookReadRepository.GetAllBooksAsync` returns a collection of `Book`
+- **THEN** the handler returns a `GetAllBooksResponse` for each `Book`, with fields mapped correctly
 
 #### Scenario: Getting a book by id
-- **WHEN** `GetBookByIdQueryHandler.Handle` is called and the faked `IBookRepository.GetBookByIdAsync` returns a `Book`
+- **WHEN** `GetBookByIdQueryHandler.Handle` is called and the faked `IBookReadRepository.GetBookByIdAsync` returns a `Book`
 - **THEN** the handler returns a `GetBookByIdResponse` with fields mapped correctly
 
 #### Scenario: Getting a book by id that does not exist
-- **WHEN** `GetBookByIdQueryHandler.Handle` is called and the faked `IBookRepository.GetBookByIdAsync` returns `null`
+- **WHEN** `GetBookByIdQueryHandler.Handle` is called and the faked `IBookReadRepository.GetBookByIdAsync` returns `null`
 - **THEN** the handler throws `KeyNotFoundException` instead of returning a null response
 
 #### Scenario: Getting all loans
-- **WHEN** `GetAllLoansQueryHandler.Handle` is called and the faked `ILoanRepository.GetAllLoansAsync` returns a collection of `Loan`
+- **WHEN** `GetAllLoansQueryHandler.Handle` is called and the faked `ILoanReadRepository.GetAllLoansAsync` returns a collection of `Loan`
 - **THEN** the handler returns a `GetAllLoansResponse` for each `Loan`, with fields mapped correctly
 
 ### Requirement: Validator Coverage
@@ -101,8 +101,8 @@ The test suite SHALL verify that `MappingProfile`'s AutoMapper configuration is 
 - **WHEN** a `MapperConfiguration` is built from `MappingProfile` and `AssertConfigurationIsValid()` is called
 - **THEN** no exception is thrown
 
-#### Scenario: Book maps to GetBookByIdResponse and GetAllBookResponse
-- **WHEN** a `Book` is mapped to `GetBookByIdResponse` and to `GetAllBookResponse`
+#### Scenario: Book maps to GetBookByIdResponse and GetAllBooksResponse
+- **WHEN** a `Book` is mapped to `GetBookByIdResponse` and to `GetAllBooksResponse`
 - **THEN** `Id`, `Title`, `Author`, `PublishedYear`, and `QuantityAvailable` match the source `Book`'s values in both cases
 
 #### Scenario: Loan maps to GetAllLoansResponse

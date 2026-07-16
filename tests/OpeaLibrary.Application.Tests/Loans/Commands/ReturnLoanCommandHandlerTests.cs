@@ -5,12 +5,12 @@ public class ReturnLoanCommandHandlerTests
     [Fact]
     public async Task Handle_WhenRepositorySucceeds_ReturnsTrueAndCommits()
     {
-        var loanRepository = new Mock<ILoanRepository>();
+        var loanRepository = new Mock<ILoanWriteRepository>();
         var unitOfWork = new Mock<IUnitOfWork>();
         var loanId = Guid.NewGuid();
 
         loanRepository.Setup(r => r.ReturnLoanAsync(loanId)).ReturnsAsync(true);
-        unitOfWork.Setup(u => u.LoanRepository).Returns(loanRepository.Object);
+        unitOfWork.Setup(u => u.LoanWriteRepository).Returns(loanRepository.Object);
 
         var handler = new ReturnLoanCommandHandler(unitOfWork.Object);
 
@@ -23,12 +23,12 @@ public class ReturnLoanCommandHandlerTests
     [Fact]
     public async Task Handle_WhenRepositoryFails_ReturnsFalseAndDoesNotCommit()
     {
-        var loanRepository = new Mock<ILoanRepository>();
+        var loanRepository = new Mock<ILoanWriteRepository>();
         var unitOfWork = new Mock<IUnitOfWork>();
         var loanId = Guid.NewGuid();
 
         loanRepository.Setup(r => r.ReturnLoanAsync(loanId)).ReturnsAsync(false);
-        unitOfWork.Setup(u => u.LoanRepository).Returns(loanRepository.Object);
+        unitOfWork.Setup(u => u.LoanWriteRepository).Returns(loanRepository.Object);
 
         var handler = new ReturnLoanCommandHandler(unitOfWork.Object);
 

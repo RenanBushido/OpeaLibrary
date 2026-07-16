@@ -1,0 +1,15 @@
+global using AutoMapper;
+global using FluentValidation;
+global using MediatR;
+global using Microsoft.AspNetCore.Diagnostics;
+global using Microsoft.AspNetCore.Mvc;
+global using OpeaLibrary.Api.Endpoints;
+global using OpeaLibrary.Api.Exceptions;
+global using OpeaLibrary.Application.Books.Commands.AddBook;
+global using OpeaLibrary.Application.Books.Queries.GetAllBooks;
+global using OpeaLibrary.Application.Books.Queries.GetBookById;
+global using OpeaLibrary.Application.Loans.Commands.RequestLoan;
+global using OpeaLibrary.CrossCutting.Extensions;
+global using OpeaLibrary.Domain.Enums;
+global using OpeaLibrary.Domain.Exceptions;
+global using OpeaLibrary.Infrastructure.Persistence.Mongodb.Interfaces;

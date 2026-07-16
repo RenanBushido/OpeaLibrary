@@ -9,7 +9,7 @@ public class GetBookByIdQueryHandlerTests
     public async Task Handle_ReturnsMappedResponse()
     {
         var book = Book.Create("Refactoring", "Martin Fowler", 1999);
-        var bookRepository = new Mock<IBookRepository>();
+        var bookRepository = new Mock<IBookReadRepository>();
         bookRepository.Setup(r => r.GetBookByIdAsync(book.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(book);
 
@@ -28,7 +28,7 @@ public class GetBookByIdQueryHandlerTests
     public async Task Handle_WhenBookDoesNotExist_ThrowsKeyNotFoundException()
     {
         var bookId = Guid.NewGuid();
-        var bookRepository = new Mock<IBookRepository>();
+        var bookRepository = new Mock<IBookReadRepository>();
         bookRepository.Setup(r => r.GetBookByIdAsync(bookId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Book?)null);
 

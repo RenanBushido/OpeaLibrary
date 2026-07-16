@@ -1,9 +1,9 @@
 namespace OpeaLibrary.Application.Books.Queries.GetBookById;
 
-public sealed class GetBookByIdQueryHandler(IBookRepository bookRepository, IMapper mapper)
+public sealed class GetBookByIdQueryHandler(IBookReadRepository bookRepository, IMapper mapper)
     : IRequestHandler<GetBookByIdRequest, GetBookByIdResponse>
 {
-    private readonly IBookRepository _bookRepository = bookRepository;
+    private readonly IBookReadRepository _bookRepository = bookRepository;
     private readonly IMapper _mapper = mapper;
 
     public async Task<GetBookByIdResponse> Handle(GetBookByIdRequest request, CancellationToken cancellationToken)

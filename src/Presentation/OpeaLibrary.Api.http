@@ -1,0 +1,6 @@
+@OpeaLibrary.Api_HostAddress = http://localhost:5139
+
+GET {{OpeaLibrary.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

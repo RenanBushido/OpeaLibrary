@@ -5,9 +5,9 @@ public class AddBookCommandHandlerTests
     [Fact]
     public async Task Handle_WithValidCommand_CreatesBookAndCommits()
     {
-        var bookRepository = new Mock<IBookRepository>();
+        var bookRepository = new Mock<IBookWriteRepository>();
         var unitOfWork = new Mock<IUnitOfWork>();
-        unitOfWork.Setup(u => u.BookRepository).Returns(bookRepository.Object);
+        unitOfWork.Setup(u => u.BookWriteRepository).Returns(bookRepository.Object);
 
         var handler = new AddBookCommandHandler(unitOfWork.Object);
         var command = new AddBookCommand("Clean Code", "Robert C. Martin", 2008, 3);

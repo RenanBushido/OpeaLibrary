@@ -1,6 +1,6 @@
 namespace OpeaLibrary.Infrastructure.Persistence.Postgres.Repositories;
 
-public class LoanRepository(OpeaLibraryDbContext dbContext) : ILoanRepository
+public class LoanWriteRepository(OpeaLibraryDbContext dbContext) : ILoanWriteRepository
 {
     private readonly OpeaLibraryDbContext _dbContext = dbContext;
 
@@ -32,10 +32,5 @@ public class LoanRepository(OpeaLibraryDbContext dbContext) : ILoanRepository
         book?.IncreaseQuantity();
 
         return true;
-    }
-
-    public async Task<IEnumerable<Loan>> GetAllLoansAsync(CancellationToken cancellationToken)
-    {
-        return await _dbContext.Loans.ToListAsync(cancellationToken);
     }
 }

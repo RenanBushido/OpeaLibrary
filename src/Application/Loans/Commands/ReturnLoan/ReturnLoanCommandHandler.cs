@@ -6,7 +6,7 @@ public sealed class ReturnLoanCommandHandler(IUnitOfWork unitOfWork) : IRequestH
 
     public async Task<bool> Handle(ReturnLoanCommand request, CancellationToken cancellationToken)
     {
-        var succeeded = await _unitOfWork.LoanRepository.ReturnLoanAsync(request.LoanId);
+        var succeeded = await _unitOfWork.LoanWriteRepository.ReturnLoanAsync(request.LoanId);
 
         if (!succeeded) return false;
 

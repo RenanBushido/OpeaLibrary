@@ -5,7 +5,8 @@ public class LoanConfigTests
     [Fact]
     public void LoanEntity_IsConfiguredWithExpectedTableAndKey()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
 
         var entityType = dbContext.Model.FindEntityType(typeof(Loan));
 
@@ -17,7 +18,8 @@ public class LoanConfigTests
     [Fact]
     public void LoanEntity_BookIdAndLoanDateAreRequired()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
         var entityType = dbContext.Model.FindEntityType(typeof(Loan));
 
         var bookId = entityType!.FindProperty(nameof(Loan.BookId));
@@ -32,7 +34,8 @@ public class LoanConfigTests
     [Fact]
     public void LoanEntity_ReturnDateIsOptional()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
         var entityType = dbContext.Model.FindEntityType(typeof(Loan));
 
         var returnDate = entityType!.FindProperty(nameof(Loan.ReturnDate));
@@ -44,7 +47,8 @@ public class LoanConfigTests
     [Fact]
     public void LoanEntity_HasForeignKeyRelationshipToBook()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
         var entityType = dbContext.Model.FindEntityType(typeof(Loan));
 
         var foreignKey = Assert.Single(entityType!.GetForeignKeys());

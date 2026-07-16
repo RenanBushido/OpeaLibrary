@@ -1,9 +1,9 @@
 namespace OpeaLibrary.Application.Loans.Queries.GetAllLoans;
 
-public sealed class GetAllLoansQueryHandler(ILoanRepository loanRepository, IMapper mapper) 
+public sealed class GetAllLoansQueryHandler(ILoanReadRepository loanRepository, IMapper mapper) 
     : IRequestHandler<GetAllLoansRequest, IEnumerable<GetAllLoansResponse>>
 {
-    private readonly ILoanRepository _loanRepository = loanRepository;
+    private readonly ILoanReadRepository _loanRepository = loanRepository;
     private readonly IMapper _mapper = mapper;
     
 

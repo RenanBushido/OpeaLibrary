@@ -1,3 +1,5 @@
+using OpeaLibrary.Application.Books.Queries.GetAllBooks;
+
 namespace OpeaLibrary.Application.Tests.Mappings;
 
 public class MappingProfileTests
@@ -34,7 +36,7 @@ public class MappingProfileTests
         var mapper = CreateConfiguration().CreateMapper();
         var book = Book.Create("Brave New World", "Aldous Huxley", 1932);
 
-        var response = mapper.Map<GetAllBookResponse>(book);
+        var response = mapper.Map<GetAllBooksResponse>(book);
 
         Assert.Equal(book.Id, response.Id);
         Assert.Equal(book.Title, response.Title);

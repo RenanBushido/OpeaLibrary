@@ -8,7 +8,7 @@ public sealed class RequestLoanCommandHandler(
 
     public async Task<bool> Handle(RequestLoanCommand request, CancellationToken cancellationToken)
     {
-        var succeeded = await _unitOfWork.LoanRepository.RequestLoanAsync(request.BookId);
+        var succeeded = await _unitOfWork.LoanWriteRepository.RequestLoanAsync(request.BookId);
 
         if (!succeeded) return false;
 

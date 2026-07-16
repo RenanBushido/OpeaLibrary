@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OpeaLibrary.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c61cf693bd0f54d25616b8716a30a1932ff81e3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c4eff08d23e0e92d674f553488614dffa95adb8f")]
 [assembly: System.Reflection.AssemblyProductAttribute("OpeaLibrary.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OpeaLibrary.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -9,7 +9,7 @@ public sealed class AddBookCommandHandler(IUnitOfWork unitOfWork)
     {
         var book = Book.Create(request.Title, request.Author, request.PublishedYear, request.QuantityAvailable);
 
-        await _unitOfWork.BookRepository.AddBookAsync(book);
+        await _unitOfWork.BookWriteRepository.AddBookAsync(book);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 

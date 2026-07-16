@@ -1,7 +1,15 @@
+global using EphemeralMongo;
+global using Microsoft.Data.Sqlite;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using MongoDB.Bson;
+global using MongoDB.Bson.Serialization;
+global using MongoDB.Bson.Serialization.Serializers;
+global using MongoDB.Driver;
 global using OpeaLibrary.Domain.Entities;
 global using OpeaLibrary.Domain.Enums;
 global using OpeaLibrary.Domain.Interfaces;
+global using OpeaLibrary.Infrastructure.Persistence.Mongodb.Extensions;
+global using OpeaLibrary.Infrastructure.Persistence.Mongodb.Repositories;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres;
 global using OpeaLibrary.Infrastructure.Persistence.Postgres.Context;
-global using OpeaLibrary.Infrastructure.Persistence.Postgres.Repositories;

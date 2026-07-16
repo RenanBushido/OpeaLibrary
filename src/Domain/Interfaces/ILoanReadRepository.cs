@@ -1,8 +1,6 @@
 namespace OpeaLibrary.Domain.Interfaces;
 
-public interface ILoanRepository
-{
-    Task<bool> RequestLoanAsync(Guid bookId);
-    Task<bool> ReturnLoanAsync(Guid loanId);
+public interface ILoanReadRepository
+{    
     Task<IEnumerable<Loan>> GetAllLoansAsync(CancellationToken cancellationToken);
 }

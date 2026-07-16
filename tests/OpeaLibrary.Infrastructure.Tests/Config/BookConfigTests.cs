@@ -5,7 +5,8 @@ public class BookConfigTests
     [Fact]
     public void BookEntity_IsConfiguredWithExpectedTableAndKey()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
 
         var entityType = dbContext.Model.FindEntityType(typeof(Book));
 
@@ -17,7 +18,8 @@ public class BookConfigTests
     [Fact]
     public void BookEntity_TitleIsRequiredWithMaxLength200()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
         var entityType = dbContext.Model.FindEntityType(typeof(Book));
 
         var title = entityType!.FindProperty(nameof(Book.Title));
@@ -30,7 +32,8 @@ public class BookConfigTests
     [Fact]
     public void BookEntity_AuthorIsRequiredWithMaxLength100()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
         var entityType = dbContext.Model.FindEntityType(typeof(Book));
 
         var author = entityType!.FindProperty(nameof(Book.Author));
@@ -43,7 +46,8 @@ public class BookConfigTests
     [Fact]
     public void BookEntity_PublishedYearAndQuantityAvailableAreRequired()
     {
-        using var dbContext = TestDbContextFactory.Create();
+        using var database = TestDbContextFactory.Create();
+        var dbContext = database.Context;
         var entityType = dbContext.Model.FindEntityType(typeof(Book));
 
         var publishedYear = entityType!.FindProperty(nameof(Book.PublishedYear));

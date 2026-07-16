@@ -1,6 +1,8 @@
+using OpeaLibrary.Application.Books.Queries.GetAllBooks;
+
 namespace OpeaLibrary.Application.Tests.Books.Queries;
 
-public class GetAllBookQueryHandlerTests
+public class GetAllBooksQueryHandlerTests
 {
     private static IMapper CreateMapper() =>
         new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>(), NullLoggerFactory.Instance).CreateMapper();
@@ -9,13 +11,13 @@ public class GetAllBookQueryHandlerTests
     public async Task Handle_ReturnsMappedResponseForEachBook()
     {
         var book = Book.Create("Domain-Driven Design", "Eric Evans", 2003);
-        var bookRepository = new Mock<IBookRepository>();
+        var bookRepository = new Mock<IBookReadRepository>();
         bookRepository.Setup(r => r.GetAllBooksAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync([book]);
 
-        var handler = new GetAllBookQueryHandler(bookRepository.Object, CreateMapper());
+        var handler = new GetAllBooksQueryHandler(bookRepository.Object, CreateMapper());
 
-        var result = await handler.Handle(new GetAllBookRequest(), CancellationToken.None);
+        var result = await handler.Handle(new GetAllBooksRequest(), CancellationToken.None);
 
         var response = Assert.Single(result);
         Assert.Equal(book.Id, response.Id);
